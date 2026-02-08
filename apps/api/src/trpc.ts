@@ -1,11 +1,14 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import { connectDB, User, Profile, Swipe, Match } from './db';
+import { connectDB, User, Profile, Swipe, Match, Message } from './db';
 import jwt from 'jsonwebtoken';
+import { EventEmitter } from 'events';
 
 const JWT_SECRET = 'heartsync-secret-change-me';
 
-export const createContext = async (opts: FetchCreateContextFnOptions) => {
+export const ee = new EventEmitter();
+
+export const createContext = async (opts: FetchCreateContextFnOptions | { req: Request }) => {
   await connectDB();
   const authHeader = opts.req.headers.get('Authorization');
   let userId: string | null = null;
@@ -21,7 +24,7 @@ export const createContext = async (opts: FetchCreateContextFnOptions) => {
   }
 
   return {
-    models: { User, Profile, Swipe, Match },
+    models: { User, Profile, Swipe, Match, Message },
     userId,
   };
 };

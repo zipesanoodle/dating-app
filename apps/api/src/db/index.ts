@@ -28,10 +28,18 @@ const MatchSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+const MessageSchema = new Schema({
+  matchId: { type: Schema.Types.ObjectId, ref: 'Match', required: true },
+  senderId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  content: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
 export const User = mongoose.models.User || mongoose.model('User', UserSchema);
 export const Profile = mongoose.models.Profile || mongoose.model('Profile', ProfileSchema);
 export const Swipe = mongoose.models.Swipe || mongoose.model('Swipe', SwipeSchema);
 export const Match = mongoose.models.Match || mongoose.model('Match', MatchSchema);
+export const Message = mongoose.models.Message || mongoose.model('Message', MessageSchema);
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/heartsync';
 
