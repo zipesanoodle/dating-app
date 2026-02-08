@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import App from './App';
-import React from 'react';
 
 // Mocking framer-motion to avoid animation issues in jsdom
 vi.mock('framer-motion', () => ({

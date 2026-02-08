@@ -4,7 +4,7 @@ import { Heart, X } from 'lucide-react';
 import { Card } from '@dating-app/ui';
 import { api, Profile } from '../api';
 
-export const SwipeCards: React.FC = () => {
+export const SwipeCards: React.FC<{ onMatch?: () => void }> = ({ onMatch }) => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [exitX, setExitX] = useState<number>(0);
@@ -50,6 +50,7 @@ export const SwipeCards: React.FC = () => {
       const { isMatch } = await api.swipe(swipedProfile.userId, direction);
       if (isMatch) {
         setShowMatch(swipedProfile);
+        if (onMatch) onMatch();
       }
     } catch (err) {
       console.error('Swipe failed', err);
