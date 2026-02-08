@@ -63,7 +63,7 @@ export const SwipeCards: React.FC = () => {
       <AnimatePresence>
         {profiles.length > 0 ? (
           <motion.div
-            key={profiles[0].id}
+            key={profiles[0]._id}
             style={{ x, rotate, opacity }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
