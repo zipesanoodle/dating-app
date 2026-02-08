@@ -18,8 +18,8 @@ export const trpc = createTRPCClient<AppRouter>({
 });
 
 export interface Profile {
-  _id: string;
-  userId: string;
+  id: number;
+  userId: number;
   name: string;
   age: number;
   bio: string;
@@ -50,14 +50,14 @@ export const api = {
     return profiles as unknown as Profile[];
   },
 
-  swipe: (toUserId: string, direction: 'left' | 'right'): Promise<{ isMatch: boolean }> =>
-    trpc.swipe.swipe.mutate({ toUserId, direction }),
+  swipe: (toUserId: number, direction: 'left' | 'right'): Promise<{ isMatch: boolean }> =>
+    trpc.discovery.swipe.mutate({ toUserId, direction }),
     
   getMe: async (): Promise<Profile | null> => {
-    const profile = await trpc.profile.getMe.query();
+    const profile = await trpc.discovery.getMe.query();
     return profile as unknown as Profile;
   },
   
-  updateProfile: (data: Partial<Profile>) =>
-    trpc.profile.updateProfile.mutate(data),
+  updateProfile: (data: any) =>
+    trpc.discovery.updateProfile.mutate(data),
 };

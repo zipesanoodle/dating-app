@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { db } from './db';
-import { verify } from 'hono/jwt';
+import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = 'heartsync-secret-change-me';
 
@@ -12,8 +12,8 @@ export const createContext = async (opts: FetchCreateContextFnOptions) => {
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.split(' ')[1];
     try {
-      const payload = await verify(token, JWT_SECRET);
-      userId = payload.userId as number;
+      const payload = jwt.verify(token, JWT_SECRET) as { userId: number };
+      userId = payload.userId;
     } catch (e) {
       // Invalid token
     }

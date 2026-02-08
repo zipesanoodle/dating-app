@@ -3,7 +3,7 @@ import { publicProcedure, router } from '../trpc';
 import { users, profiles } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
-import { sign } from 'hono/jwt';
+import jwt from 'jsonwebtoken';
 import { TRPCError } from '@trpc/server';
 
 const JWT_SECRET = 'heartsync-secret-change-me';
@@ -66,12 +66,7 @@ export const authRouter = router({
         });
       }
 
-      const payload = {
-        userId: user.id,
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-      };
-      
-      const token = await sign(payload, JWT_SECRET);
+      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
 
       return { token, user: { id: user.id, email: user.email } };
     }),

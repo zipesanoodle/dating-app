@@ -1,13 +1,9 @@
-import { connectDB, User, Profile } from './mongodb';
+import { db } from './index';
+import { users, profiles } from './schema';
 import bcrypt from 'bcryptjs';
 
 async function seed() {
-  console.log('Seeding MongoDB database...');
-  await connectDB();
-
-  // Clear existing data (optional, but good for a fresh start)
-  await User.deleteMany({});
-  await Profile.deleteMany({});
+  console.log('Seeding SQLite database...');
 
   const passwordHash = await bcrypt.hash('password123', 10);
 
@@ -28,18 +24,18 @@ async function seed() {
   };
 
   for (const userData of usersToInsert) {
-    const newUser = await User.create(userData);
+    const [newUser] = await db.insert(users).values(userData).returning();
     
     const nameKey = userData.email.split('@')[0];
     const data = profileData[nameKey];
 
-    await Profile.create({
-      userId: newUser._id,
+    await db.insert(profiles).values({
+      userId: newUser.id,
       name: data.name,
       age: data.age,
       bio: data.bio,
       imageUrl: data.imageUrl,
-      interests: data.interests,
+      interests: JSON.stringify(data.interests),
     });
   }
 
