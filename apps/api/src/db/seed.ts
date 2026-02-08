@@ -1,4 +1,4 @@
-import { connectDB, User, Profile } from './mongodb';
+import { connectDB, User, Profile } from './index';
 import bcrypt from 'bcryptjs';
 
 async function seed() {
