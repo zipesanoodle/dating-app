@@ -1,0 +1,13 @@
+{
+  "name": "dating-app-infra",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@pulumi/pulumi": "^3.0.0",
+    "@pulumi/aws": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

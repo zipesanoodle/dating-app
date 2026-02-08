@@ -1,1 +1,38 @@
-node_modules\ntarget\n.DS_Store\n.env\ninfra/node_modules
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+bin/
+out/
+.turbo/
+
+# Tauri
+src-tauri/target/
+
+# Pulumi
+.pulumi/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+*.local
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
