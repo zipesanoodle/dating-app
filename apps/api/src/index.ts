@@ -1,12 +1,14 @@
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { jwt } from 'hono/jwt';
+import { cors } from 'hono/cors';
 import { db } from './db';
 import { users, profiles, swipes, matches } from './db/schema';
 import { eq, and, notInArray, or } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 
 const app = new Hono();
+app.use('/*', cors());
 const JWT_SECRET = 'heartsync-secret-change-me';
 
 // Auth middleware for protected routes
