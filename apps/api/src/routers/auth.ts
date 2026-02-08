@@ -1,7 +1,5 @@
 import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
-import { users, profiles } from '../db/schema';
-import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { TRPCError } from '@trpc/server';
@@ -17,7 +15,7 @@ export const authRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { email, password } = input;
       
-      const existingUser = await ctx.db.select().from(users).where(eq(users.email, email)).get();
+      const existingUser = await ctx.models.User.findOne({ email });
       if (existingUser) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
@@ -27,19 +25,19 @@ export const authRouter = router({
 
       const passwordHash = await bcrypt.hash(password, 10);
       
-      const [newUser] = await ctx.db.insert(users).values({
+      const newUser = await ctx.models.User.create({
         email,
         passwordHash,
-      }).returning();
+      });
 
       // Create an empty profile for the new user
-      await ctx.db.insert(profiles).values({
-        userId: newUser.id,
+      await ctx.models.Profile.create({
+        userId: newUser._id,
         name: email.split('@')[0],
         age: 18,
       });
 
-      return { success: true, userId: newUser.id };
+      return { success: true, userId: newUser._id.toString() };
     }),
 
   login: publicProcedure
@@ -50,7 +48,7 @@ export const authRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { email, password } = input;
       
-      const user = await ctx.db.select().from(users).where(eq(users.email, email)).get();
+      const user = await ctx.models.User.findOne({ email });
       if (!user) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
@@ -66,8 +64,8 @@ export const authRouter = router({
         });
       }
 
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
+      const token = jwt.sign({ userId: user._id.toString() }, JWT_SECRET, { expiresIn: '24h' });
 
-      return { token, user: { id: user.id, email: user.email } };
+      return { token, user: { id: user._id.toString(), email: user.email } };
     }),
 });

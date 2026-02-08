@@ -16,10 +16,8 @@
   "packageManager": "pnpm@10.28.2",
   "dependencies": {
     "@hono/node-server": "^1.19.9",
-    "@libsql/client": "^0.17.0",
     "@trpc/server": "^11.9.0",
     "bcryptjs": "^3.0.3",
-    "drizzle-orm": "^0.45.1",
     "hono": "^4.11.8",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.6",
